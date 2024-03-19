@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+
 #define MAX_SIZE 100
 struct Field {
     bool hasMine;
@@ -19,8 +20,9 @@ class MinesweeperBoard {
     private:
         int cols;
         int rows;
+        GameMode mode;
         GameState state;
-        Field data[MAX_SIZE][MAX_SIZE];
+        Field data[MAX_SIZE][MAX_SIZE]{};
         void set_fields();
         void set_empty(int width, int height);
         void display_field(int row, int col) const;
@@ -30,7 +32,9 @@ class MinesweeperBoard {
         void gen_debug();
         void gen_random_fields(int nMines);
         void generate_mines(GameMode mode);
+        bool hasMine(int row, int col);
         bool field_on_board(int row, int col) const;
+        bool is_first_move() const;
     public:
         MinesweeperBoard();
         MinesweeperBoard(int width, int height, GameMode mode);
@@ -59,23 +63,23 @@ class MinesweeperBoard {
         bool hasFlag(int row, int col) const;
 
         // if the field at (row,col) was not revealed - change flag status for this field
-        // Do nothing if any of the following is true
+        // Do // try to reveal the field at (row,col)
+        //        // Do nothing if any of the following is true
+        //        // - field was already revealed
+        //        // - either row or col is outside board
+        //        // - game is already finished
+        //        // - there is a flag on the field
+        //        //
+        //        // If the field was not revealed and there is no mine on it - reveal it
+        //        // If the field was not revealed and there is a mine on it:
+        //        // - if it's the first player action - move mine to another location, reveal field (not in DEBUG mode!)
+        //        // - reveal it and finish game, nothing if any of the following is true
         // - field was already revealed
         // - either row or col is outside board
         // - game is already finished
         void toggleFlag(int row, int col);
 
-        // try to reveal the field at (row,col)
-        // Do nothing if any of the following is true
-        // - field was already revealed
-        // - either row or col is outside board
-        // - game is already finished
-        // - there is a flag on the field
-        //
-        // If the field was not revealed and there is no mine on it - reveal it
-        // If the field was not revealed and there is a mine on it:
-        // - if its the first player action - move mine to another location, reveal field (not in DEBUG mode!)
-        // - reveal it and finish game
+
         void revealField(int row, int col);
 
         // return true if the field was revealed

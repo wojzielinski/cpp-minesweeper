@@ -1,4 +1,6 @@
 #include "MinesweeperBoard.h"
+#include <cassert>
+
 void MinesweeperBoard::set_fields() {
     set_empty(cols,rows);
     //BE CAREFUL! There is no dimensions sanitization for fields below!!!
@@ -10,6 +12,11 @@ void MinesweeperBoard::set_fields() {
     data[3][4].hasFlag = true;
     data[3][4].hasMine = true;
     data[3][4].isRevealed = true;
+}
+
+bool MinesweeperBoard::hasMine(int row, int col) {
+    if(field_on_board(row,col) && data[row][col].hasMine) return true;
+    return false;
 }
 
 void MinesweeperBoard::set_empty(int width, int height) {
@@ -49,16 +56,22 @@ void MinesweeperBoard::gen_random_fields(int nMines) {
 void MinesweeperBoard::gen_easy() {
     int nMines = std::ceil(0.1*rows*cols);
     gen_random_fields(nMines);
+    assert(getMineCount()==nMines);
+    mode = EASY;
 }
 
 void MinesweeperBoard::gen_normal() {
     int nMines = std::ceil(0.2*rows*cols);
     gen_random_fields(nMines);
+    assert(getMineCount()==nMines);
+    mode = NORMAL;
 }
 
 void MinesweeperBoard::gen_hard() {
     int nMines = std::ceil(0.3*rows*cols);
     gen_random_fields(nMines);
+    assert(getMineCount()==nMines);
+    mode = HARD;
 }
 
 void MinesweeperBoard::gen_debug() {
@@ -80,10 +93,11 @@ void MinesweeperBoard::gen_debug() {
         data[row][col].hasMine = true;
         row+=2;
     }
+    mode = DEBUG;
 }
 
-void  MinesweeperBoard::generate_mines(GameMode mode){
-    switch (mode) {
+void  MinesweeperBoard::generate_mines(GameMode gamemode){
+    switch (gamemode) {
         case EASY:
             gen_easy(); break;
         case NORMAL:
@@ -167,8 +181,8 @@ bool MinesweeperBoard::field_on_board(int row, int col) const{
 }
 
 bool MinesweeperBoard::hasFlag(int row, int col) const {
-    if(field_on_board(row, col) && data[row][col].hasFlag) { return true; }
-    else if(!field_on_board(row, col) || !data[row][col].hasFlag || isRevealed(row,col)) { return false; }
+    if(!field_on_board(row, col) || !data[row][col].hasFlag || isRevealed(row,col)) return false;
+    return true;
 }
 
 void MinesweeperBoard::toggleFlag(int row, int col) {
@@ -182,8 +196,36 @@ void MinesweeperBoard::toggleFlag(int row, int col) {
     }
 }
 
+bool MinesweeperBoard::is_first_move() const {
+    for(int row=0; row<rows; row++){
+        for(int col=0; col<cols; col++){
+            if(data[row][col].isRevealed) return false;
+        }
+    }
+    return true;
+}
+
 void MinesweeperBoard::revealField(int row, int col) {
-//TO DO
+    if(!field_on_board(row,col)||isRevealed(row, col)||getGameState()!=RUNNING|| hasFlag(row,col)) return;
+    if(!isRevealed(row,col) && !hasMine(row,col)) {
+        data[row][col].isRevealed = true;
+        return;
+    }
+    if(!isRevealed(row,col) && hasMine(row,col)){
+        if(mode!=DEBUG && is_first_move()) {
+            int newRow, newCol;
+            do {
+                newRow = rand() % rows;
+                newCol = rand() % cols;
+            } while (data[newRow][newCol].hasMine);
+            data[newRow][newCol].hasMine = true;
+            data[row][col].hasMine = false;
+            data[row][col].isRevealed = true;
+            return;
+        }
+        data[row][col].isRevealed=true;
+        state = FINISHED_LOSS;
+    }
 }
 
 bool MinesweeperBoard::isRevealed(int row, int col) const {
@@ -203,6 +245,7 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const {
     } else {
         if(data[row][col].hasMine) return 'x';
         if(countMines(row,col)==0) return ' ';
-        //return countMines(row,col; should be char, is int!!!
+        return static_cast<char>(countMines(row,col)+48);
+
     }
 }
