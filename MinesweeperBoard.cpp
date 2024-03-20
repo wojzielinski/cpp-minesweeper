@@ -1,6 +1,7 @@
 #include "MinesweeperBoard.h"
 
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include <cstdlib>
 #include <cassert>
@@ -123,14 +124,14 @@ MinesweeperBoard::MinesweeperBoard(int width, int height, GameMode mode){
 }
 
 void MinesweeperBoard::debug_display() const {
-    std::cout << "      ";
+    std::cout << std::setw(5) << " ";
     for(int a=0; a<cols;a++){
-        std::cout << a << "     ";
+        std::cout << " " << std::setw(5) << std::right << a;
     }
     std::cout << std::endl;
 
     for (int row = 0; row < rows; row++) {
-        std::cout << row <<"\t";
+        std::cout << std::setw(5) << std::right << row << " ";
         for (int col=0; col < cols; col++) {
             this->display_field(row,col);
         }

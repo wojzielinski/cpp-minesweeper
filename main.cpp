@@ -9,7 +9,7 @@ int main() {
     //MinesweeperBoard testBoardD(10,10,DEBUG);
     //MinesweeperBoard testBoardE(10,10,EASY);
     //MinesweeperBoard testBoardN(10,10,NORMAL);
-    MinesweeperBoard testBoardH(10,10,EASY);
+    MinesweeperBoard testBoardH(15,15,EASY);
     //board.debug_display();
 
     //TESTING FIELDS REVEALING aka AUTO-PLAY
