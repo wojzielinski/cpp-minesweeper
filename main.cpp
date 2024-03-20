@@ -1,15 +1,15 @@
 #include "MinesweeperBoard.h"
-/*
- * [IN-PROGRESS] Missing board size check!
- */
-int main() {
-    srand(time(NULL));
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
 
+int main() {
+    std::srand(std::time(NULL));
     //MinesweeperBoard board;
     //MinesweeperBoard testBoardD(10,10,DEBUG);
     //MinesweeperBoard testBoardE(10,10,EASY);
     //MinesweeperBoard testBoardN(10,10,NORMAL);
-    MinesweeperBoard testBoardH(20,20,HARD);
+    MinesweeperBoard testBoardH(10,10,EASY);
     //board.debug_display();
 
     //TESTING FIELDS REVEALING aka AUTO-PLAY

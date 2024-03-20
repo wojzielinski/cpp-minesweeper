@@ -1,11 +1,6 @@
 #ifndef MINESWEEPERBOARD_H
 #define MINESWEEPERBOARD_H
 
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
-
 #define MAX_SIZE 100
 struct Field {
     bool hasMine;
@@ -17,24 +12,22 @@ enum GameMode { DEBUG, EASY, NORMAL, HARD };
 enum GameState { RUNNING, FINISHED_WIN, FINISHED_LOSS };
 
 class MinesweeperBoard {
-    private:
         int cols;
         int rows;
+        bool firstMove;
         GameMode mode;
         GameState state;
         Field data[MAX_SIZE][MAX_SIZE]{};
-        void set_fields();
-        void set_empty(int width, int height);
         void display_field(int row, int col) const;
-        void gen_easy();
-        void gen_normal();
-        void gen_hard();
+        bool field_on_board(int row, int col) const;
         void gen_debug();
+        void gen_rand_mines(int nMines);
         void gen_random_fields(int nMines);
         void generate_mines(GameMode mode);
-        bool hasMine(int row, int col);
-        bool field_on_board(int row, int col) const;
-        bool is_first_move() const;
+        bool hasMine(int row, int col) const;
+        void set_empty(int width, int height);
+        void set_fields();
+
     public:
         MinesweeperBoard();
         MinesweeperBoard(int width, int height, GameMode mode);
