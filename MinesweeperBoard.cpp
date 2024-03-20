@@ -39,13 +39,11 @@ void MinesweeperBoard::gen_debug() {
         data[row][col].hasMine = true;
         row+=2;
     }
-    mode = DEBUG;
 }
 
 void MinesweeperBoard::gen_rand_mines(int nMines) {
     gen_random_fields(nMines);
     assert(getMineCount()==nMines);
-    mode = EASY;
 }
 
 void MinesweeperBoard::gen_random_fields(int nMines) {
@@ -63,13 +61,21 @@ void MinesweeperBoard::gen_random_fields(int nMines) {
 void  MinesweeperBoard::generate_mines(GameMode gamemode){
     switch (gamemode) {
         case EASY:
-            gen_rand_mines(std::ceil(0.1*rows*cols)); break;
+            gen_rand_mines(std::ceil(0.1*rows*cols));
+            mode = EASY;
+            break;
         case NORMAL:
-            gen_rand_mines(std::ceil(0.2*rows*cols)); break;
+            gen_rand_mines(std::ceil(0.2*rows*cols));
+            mode = NORMAL;
+            break;
         case HARD:
-            gen_rand_mines(std::ceil(0.3*rows*cols)); break;
+            gen_rand_mines(std::ceil(0.3*rows*cols));
+            mode = HARD;
+            break;
         case DEBUG:
-            gen_debug(); break;
+            gen_debug();
+            mode = DEBUG;
+            break;
     }
 }
 
@@ -112,14 +118,18 @@ MinesweeperBoard::MinesweeperBoard(){
     cols = 7;
     rows = 6;
     set_fields();
+    state = RUNNING;
+    mode = DEBUG;
     firstMove = true;
 }
 
-MinesweeperBoard::MinesweeperBoard(int width, int height, GameMode mode){
+MinesweeperBoard::MinesweeperBoard(int width, int height, GameMode gMode){
     cols = width;
     rows = height;
     set_empty(width,height);
-    generate_mines(mode);
+    mode = gMode;
+    generate_mines(gMode);
+    state = RUNNING;
     firstMove = true;
 }
 

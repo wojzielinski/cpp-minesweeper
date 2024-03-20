@@ -7,4 +7,8 @@ add_compile_options(-Wall -pedantic)
 add_executable(saper main.cpp
         MinesweeperBoard.cpp
         MinesweeperBoard.h
+        MSBoardTextView.cpp
+        MSBoardTextView.h
+        MSTextController.cpp
+        MSTextController.h
 )
