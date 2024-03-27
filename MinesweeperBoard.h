@@ -18,6 +18,7 @@ class MinesweeperBoard {
         GameMode mode;
         GameState state;
         Field data[MAX_SIZE][MAX_SIZE]{};
+        void change_location(int row, int col);
         void display_field(int row, int col) const;
         bool field_on_board(int row, int col) const;
         void gen_debug();
@@ -25,7 +26,7 @@ class MinesweeperBoard {
         void gen_random_fields(int nMines);
         void generate_mines(GameMode mode);
         bool hasMine(int row, int col) const;
-        bool isFinished() const;
+        bool isFinishedWin() const;
         void recursiveRevealField( int row, int col);
         void set_empty(int width, int height);
         void set_fields();

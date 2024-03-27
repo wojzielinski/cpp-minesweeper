@@ -8,6 +8,19 @@
 
 //PRIVATE
 //===============
+void MinesweeperBoard::change_location(int row, int col) {
+    int newRow, newCol;
+    do {
+        newRow = rand() % rows;
+        newCol = rand() % cols;
+    } while (data[newRow][newCol].hasMine);
+    data[newRow][newCol].hasMine = true;
+    data[row][col].hasMine = false;
+    data[row][col].isRevealed = true;
+    firstMove=false;
+    if(isFinishedWin()) state = FINISHED_WIN;
+}
+
 void MinesweeperBoard::display_field(int row, int col) const{
     std::cout << "[" << (data[row][col].hasMine?"M":".");
     std::cout << (data[row][col].isRevealed?"o":".");
@@ -84,18 +97,19 @@ bool MinesweeperBoard::hasMine(int row, int col) const {
     return false;
 }
 
-bool MinesweeperBoard::isFinished() const {
+bool MinesweeperBoard::isFinishedWin() const {
+    if(getGameState()==FINISHED_LOSS) return false;
     int counter = 0;
     int width = getBoardWidth();
     int height = getBoardHeight();
     for(int row =0; row<height; row++){
         for(int col=0; col<width; col++){
-            if(hasMine(row,col) && hasFlag(row,col)){
+            if(isRevealed(row,col)){
                 counter++;
             }
         }
     }
-    if(counter==getMineCount()) return true;
+    if(counter==(width*height)-getMineCount()) return true;
     return false;
 }
 
@@ -229,8 +243,6 @@ void MinesweeperBoard::toggleFlag(int row, int col) {
     } else {
         data[row][col].hasFlag = true;
     }
-
-    if(isFinished()) state = GameState::FINISHED_WIN;
 }
 
 void MinesweeperBoard::revealField(int row, int col) {
@@ -243,18 +255,11 @@ void MinesweeperBoard::revealField(int row, int col) {
         data[row][col].isRevealed = true;
         firstMove=false;
         recursiveRevealField(row,col);
+        if(isFinishedWin()) state = FINISHED_WIN;
         return;
     }
     if(mode!=DEBUG && firstMove) {
-        int newRow, newCol;
-        do {
-            newRow = rand() % rows;
-            newCol = rand() % cols;
-        } while (data[newRow][newCol].hasMine);
-        data[newRow][newCol].hasMine = true;
-        data[row][col].hasMine = false;
-        data[row][col].isRevealed = true;
-        firstMove=false;
+        change_location(row,col);
         return;
     }
     data[row][col].isRevealed=true;
