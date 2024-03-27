@@ -25,6 +25,8 @@ class MinesweeperBoard {
         void gen_random_fields(int nMines);
         void generate_mines(GameMode mode);
         bool hasMine(int row, int col) const;
+        bool isFinished() const;
+        void recursiveRevealField( int row, int col);
         void set_empty(int width, int height);
         void set_fields();
 

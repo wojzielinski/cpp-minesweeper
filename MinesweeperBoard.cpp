@@ -84,6 +84,34 @@ bool MinesweeperBoard::hasMine(int row, int col) const {
     return false;
 }
 
+bool MinesweeperBoard::isFinished() const {
+    int counter = 0;
+    int width = getBoardWidth();
+    int height = getBoardHeight();
+    for(int row =0; row<height; row++){
+        for(int col=0; col<width; col++){
+            if(hasMine(row,col) && hasFlag(row,col)){
+                counter++;
+            }
+        }
+    }
+    if(counter==getMineCount()) return true;
+    return false;
+}
+
+void MinesweeperBoard::recursiveRevealField(int row, int col) {
+    if(countMines(row,col)==0){
+        for(int tempRow=row-1; tempRow<=row+1; tempRow++){
+            for(int tempCol=col-1; tempCol<=col+1; tempCol++){
+                if(!field_on_board(tempRow, tempCol)) return;
+                if(tempRow!=row || tempCol!=col){
+                    revealField(tempRow,tempCol);
+                }
+            }
+        }
+    }
+}
+
 void MinesweeperBoard::set_empty(int width, int height) {
     if(height <= MAX_SIZE && width <= MAX_SIZE){
         for(int row=0; row<height; row++){
@@ -178,7 +206,7 @@ int MinesweeperBoard::countMines(int row, int col) const {
     int counter =0;
     for(int tempRow=row-1; tempRow<=row+1; tempRow++){
         for(int tempCol=col-1; tempCol<=col+1; tempCol++){
-            if(field_on_board(tempRow, tempCol) && tempRow!=row && tempCol!=col){
+            if(field_on_board(tempRow, tempCol) && (tempRow!=row || tempCol!=col)){
                 if(hasMine(tempRow, tempCol)) { counter++; }
             }
         }
@@ -201,6 +229,8 @@ void MinesweeperBoard::toggleFlag(int row, int col) {
     } else {
         data[row][col].hasFlag = true;
     }
+
+    if(isFinished()) state = GameState::FINISHED_WIN;
 }
 
 void MinesweeperBoard::revealField(int row, int col) {
@@ -212,6 +242,7 @@ void MinesweeperBoard::revealField(int row, int col) {
     if(!hasMine(row,col)) {
         data[row][col].isRevealed = true;
         firstMove=false;
+        recursiveRevealField(row,col);
         return;
     }
     if(mode!=DEBUG && firstMove) {
