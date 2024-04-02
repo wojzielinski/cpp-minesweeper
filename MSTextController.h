@@ -13,6 +13,7 @@ class MSTextController {
     public:
         MSTextController( MinesweeperBoard & boardRef, MSBoardTextView & viewRef );
         void play();
+        void print_gamestate() const;
 };
 
 

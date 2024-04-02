@@ -117,9 +117,10 @@ void MinesweeperBoard::recursiveRevealField(int row, int col) {
     if(countMines(row,col)==0){
         for(int tempRow=row-1; tempRow<=row+1; tempRow++){
             for(int tempCol=col-1; tempCol<=col+1; tempCol++){
-                if(!field_on_board(tempRow, tempCol)) return;
-                if(tempRow!=row || tempCol!=col){
-                    revealField(tempRow,tempCol);
+                if(field_on_board(tempRow, tempCol)) {
+                    if (tempRow != row || tempCol != col) {
+                        revealField(tempRow, tempCol);
+                    }
                 }
             }
         }

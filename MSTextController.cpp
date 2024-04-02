@@ -5,14 +5,14 @@
 //PRIVATE
 //===============
 Action MSTextController::choose_action() {
-    char choice;
+    char choice[2];
     std::cout << "What would you like to do?" << std::endl;
     std::cout << "1. Flag field" << std::endl;
     std::cout << "2. Reveal field" << std:: endl;
     std::cout << "3. Display board" << std:: endl;
     std::cout << "Your choice (F/R/D): ";
     std::cin >> choice;
-    switch (tolower(choice)) {
+    switch (tolower(choice[0])) {
         case 'f':
             return Action::FLAG;
         case 'r':
@@ -54,5 +54,23 @@ void MSTextController::play() {
                 break;
         }
 
+    }
+    print_gamestate();
+}
+
+void MSTextController::print_gamestate() const {
+    GameState state = board.getGameState();
+    switch (state) {
+        case GameState::RUNNING:
+            std::cout << "Game is currently running." << std::endl;
+            break;
+        case GameState::FINISHED_LOSS:
+            std::cout << "Game over :c" << std::endl;
+            break;
+        case GameState::FINISHED_WIN:
+            std::cout << "You won!" << std::endl;
+            break;
+        default:
+            std::cout << "Couldn't fetch current game state" << std::endl;
     }
 }

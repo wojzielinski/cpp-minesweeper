@@ -3,12 +3,10 @@
 
 #include "MSBoardTextView.h"
 #include "MinesweeperBoard.h"
-#include <iostream>
-#include <iomanip>
 
 //PUBLIC
 //===============
-MSBoardTextView::MSBoardTextView(MinesweeperBoard &boardRef) : board(boardRef)
+MSBoardTextView::MSBoardTextView(MinesweeperBoard & boardRef) : board(boardRef)
 {
     //assigned MinesweeperBoard reference to "board"
 }

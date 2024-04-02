@@ -11,7 +11,7 @@ int main() {
     //MinesweeperBoard testBoardD(10,10,DEBUG);
     //MinesweeperBoard testBoardE(10,10,EASY);
     //MinesweeperBoard testBoardN(10,10,NORMAL);
-    MinesweeperBoard testBoardH(15,15,DEBUG);
+    MinesweeperBoard testBoardH(10,10,EASY);
     MSBoardTextView MStestBoardH(testBoardH);
     MSTextController ctrl (testBoardH, MStestBoardH);
     //board.debug_display();
@@ -27,7 +27,7 @@ int main() {
     }while(testBoardH.getGameState()==RUNNING);
     testBoardH.debug_display();
     //END OF TEST
-*/  testBoardH.debug_display();
+*/ // testBoardH.debug_display();
     ctrl.play();
     //testBoardE.debug_display();
     //testBoardN.debug_display();
