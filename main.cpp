@@ -19,8 +19,8 @@ int main() {
     //TESTING FIELDS REVEALING aka AUTO-PLAY
     testBoardH.debug_display();
     do{
-        int rRow = rand() % 10;
-        int rCol = rand() % 10;
+        int rRow = rand() % testBoardH.getBoardHeight();
+        int rCol = rand() % testBoardH.getBoardWidth();
         std::cout << "(" << rRow << "," << rCol << ")" << std::endl;
         testBoardH.revealField(rRow, rCol);
         MStestBoardH.display();

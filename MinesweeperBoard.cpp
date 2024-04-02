@@ -8,6 +8,19 @@
 
 //PRIVATE
 //===============
+void MinesweeperBoard::change_location(int row, int col) {
+    int newRow, newCol;
+    do {
+        newRow = rand() % rows;
+        newCol = rand() % cols;
+    } while (data[newRow][newCol].hasMine);
+    data[newRow][newCol].hasMine = true;
+    data[row][col].hasMine = false;
+    data[row][col].isRevealed = true;
+    firstMove=false;
+    if(isFinishedWin()) state = FINISHED_WIN;
+}
+
 void MinesweeperBoard::display_field(int row, int col) const{
     std::cout << "[" << (data[row][col].hasMine?"M":".");
     std::cout << (data[row][col].isRevealed?"o":".");
@@ -82,6 +95,35 @@ void  MinesweeperBoard::generate_mines(GameMode gamemode){
 bool MinesweeperBoard::hasMine(int row, int col) const {
     if(field_on_board(row,col) && data[row][col].hasMine) return true;
     return false;
+}
+
+bool MinesweeperBoard::isFinishedWin() const {
+    if(getGameState()==FINISHED_LOSS) return false;
+    int counter = 0;
+    int width = getBoardWidth();
+    int height = getBoardHeight();
+    for(int row =0; row<height; row++){
+        for(int col=0; col<width; col++){
+            if(isRevealed(row,col)){
+                counter++;
+            }
+        }
+    }
+    if(counter==(width*height)-getMineCount()) return true;
+    return false;
+}
+
+void MinesweeperBoard::recursiveRevealField(int row, int col) {
+    if(countMines(row,col)==0){
+        for(int tempRow=row-1; tempRow<=row+1; tempRow++){
+            for(int tempCol=col-1; tempCol<=col+1; tempCol++){
+                if(!field_on_board(tempRow, tempCol)) return;
+                if(tempRow!=row || tempCol!=col){
+                    revealField(tempRow,tempCol);
+                }
+            }
+        }
+    }
 }
 
 void MinesweeperBoard::set_empty(int width, int height) {
@@ -178,7 +220,7 @@ int MinesweeperBoard::countMines(int row, int col) const {
     int counter =0;
     for(int tempRow=row-1; tempRow<=row+1; tempRow++){
         for(int tempCol=col-1; tempCol<=col+1; tempCol++){
-            if(field_on_board(tempRow, tempCol) && tempRow!=row && tempCol!=col){
+            if(field_on_board(tempRow, tempCol) && (tempRow!=row || tempCol!=col)){
                 if(hasMine(tempRow, tempCol)) { counter++; }
             }
         }
@@ -212,18 +254,12 @@ void MinesweeperBoard::revealField(int row, int col) {
     if(!hasMine(row,col)) {
         data[row][col].isRevealed = true;
         firstMove=false;
+        recursiveRevealField(row,col);
+        if(isFinishedWin()) state = FINISHED_WIN;
         return;
     }
     if(mode!=DEBUG && firstMove) {
-        int newRow, newCol;
-        do {
-            newRow = rand() % rows;
-            newCol = rand() % cols;
-        } while (data[newRow][newCol].hasMine);
-        data[newRow][newCol].hasMine = true;
-        data[row][col].hasMine = false;
-        data[row][col].isRevealed = true;
-        firstMove=false;
+        change_location(row,col);
         return;
     }
     data[row][col].isRevealed=true;

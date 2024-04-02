@@ -1,3 +1,6 @@
+#include <iostream>
+#include <iomanip>
+
 #include "MSBoardTextView.h"
 #include "MinesweeperBoard.h"
 #include <iostream>
@@ -7,7 +10,7 @@
 //===============
 MSBoardTextView::MSBoardTextView(MinesweeperBoard &boardRef) : board(boardRef)
 {
-
+    //assigned MinesweeperBoard reference to "board"
 }
 
 void MSBoardTextView::display() {
