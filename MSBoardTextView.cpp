@@ -3,26 +3,30 @@
 
 #include "MSBoardTextView.h"
 #include "MinesweeperBoard.h"
+#include <iostream>
+#include <iomanip>
 
 //PUBLIC
 //===============
-MSBoardTextView::MSBoardTextView(MinesweeperBoard & boardRef) : board(boardRef)
+MSBoardTextView::MSBoardTextView(MinesweeperBoard &boardRef) : board(boardRef)
 {
     //assigned MinesweeperBoard reference to "board"
 }
 
 void MSBoardTextView::display() {
-    int rows = board.getBoardHeight();
-    int cols = board.getBoardWidth();
-    std::cout << std::setw(4) << " ";
-    for(int ncol=0; ncol<cols;ncol++){
-        std::cout << " " << std::setw(3) << std::right << ncol;
+    int width = board.getBoardWidth();
+    int height = board.getBoardHeight();
+
+    std::cout << std::setw(3) << " ";
+    for(int a=0; a<width;a++){
+        std::cout << " " << std::setw(3) << std::right << a;
     }
     std::cout << std::endl;
-    for (int row = 0; row < rows; row++) {
-        std::cout << std::setw(4) << std::right << row << " ";
-        for (int col=0; col < cols; col++) {
-            std::cout << " [" << board.getFieldInfo(row,col) << "]" ;
+
+    for (int row=0; row<height; row++){
+        std::cout << std::setw(3) << std::right << row << " ";
+        for(int col=0; col<width; col++){
+            std::cout << " [" << board.getFieldInfo(row,col) << "]";
         }
         std::cout << std::endl;
     }

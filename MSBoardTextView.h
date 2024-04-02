@@ -5,7 +5,7 @@
 class MSBoardTextView {
         MinesweeperBoard & board;
     public:
-        MSBoardTextView( MinesweeperBoard & boardRef);
+        MSBoardTextView( MinesweeperBoard &boardRef );
         void display();
 };
 
