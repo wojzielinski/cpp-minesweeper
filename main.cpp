@@ -14,7 +14,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper");
 
-    sf::CircleShape circle(10);
+    sf::CircleShape circle(10,4);
     sf::FloatRect circleRect=circle.getLocalBounds();
     circle.setFillColor(sf::Color::Yellow);
     circle.setPosition(400,300);
@@ -24,17 +24,17 @@ int main() {
     );
 
     sf::Texture bgImage;
-    if (!bgImage.loadFromFile("C:/Users/harcs/Documents/PO/saper_wojciech_zielinski/saper_bg.jpg"))
+    if (!bgImage.loadFromFile("saper_bg.jpg"))
         return EXIT_FAILURE;
     sf::Sprite bgSprite(bgImage);
 
     sf::SoundBuffer duckBuffer;
-    duckBuffer.loadFromFile("C:/Users/harcs/Documents/PO/saper_wojciech_zielinski/kaczuszka.wav");
+    duckBuffer.loadFromFile("kaczuszka.wav");
     sf::Sound duck;
     duck.setBuffer(duckBuffer);
 
     sf::Font font;
-    if (!font.loadFromFile("C:/Users/harcs/Documents/PO/saper_wojciech_zielinski/VT323-Regular.ttf"))
+    if (!font.loadFromFile("VT323-Regular.ttf"))
         return EXIT_FAILURE;
 
     sf::Text title("Minesweeper!", font, 40);
@@ -116,3 +116,27 @@ int main() {
     //testBoardH.debug_display();
     return 0;
 }
+
+/*
+ SFML USAGE
+
+ #include <SFML/Graphics.hpp>
+
+ int main() {
+    sf::RenderWindow win {...};
+
+    while(win.isOpen()) {
+        //BLOCK 1
+        sf::Event event;         //tworzenie eventu
+        while(win.pull(event)){
+            if...
+        }                       //stworzenie pętli, która dziala dopoki nie zamkniemy okna
+
+        //BLOCK 2
+    }
+ }
+
+ sf::CircleShape - kółko lub dowolny wielokąt foremny wpisany w okrąg, argument to średnica
+ sf::CircleShape c{50};     //kółko
+ sf::CircleShape tr{20,3};  //triangle
+ */
