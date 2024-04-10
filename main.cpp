@@ -1,6 +1,7 @@
 #include "MinesweeperBoard.h"
 #include "MSBoardTextView.h"
 #include "MSTextController.h"
+#include "MSSFMLView.h"
 
 #include <iostream>
 #include <ctime>
@@ -14,6 +15,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Minesweeper");
 
+
     sf::CircleShape circle(10,4);
     sf::FloatRect circleRect=circle.getLocalBounds();
     circle.setFillColor(sf::Color::Yellow);
@@ -22,6 +24,7 @@ int main() {
             (circleRect.left + circleRect.width)/2.0f,
             (circleRect.top + circleRect.height)/2.0f
     );
+
 
     sf::Texture bgImage;
     if (!bgImage.loadFromFile("saper_bg.jpg"))
@@ -33,9 +36,10 @@ int main() {
     sf::Sound duck;
     duck.setBuffer(duckBuffer);
 
-    sf::Font font;
+    /*sf::Font font;
     if (!font.loadFromFile("VT323-Regular.ttf"))
-        return EXIT_FAILURE;
+        return EXIT_FAILURE;*/
+/*
 
     sf::Text title("Minesweeper!", font, 40);
     title.setFillColor(sf::Color::Red);
@@ -60,44 +64,26 @@ int main() {
         }
         posy+=40;
     }
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            if(event.type == sf::Event::MouseMoved)
-                circle.setPosition(event.mouseMove.x, event.mouseMove.y);
-            if(event.type == sf::Event::MouseButtonPressed)
-                duck.play();
-        }
-
-        window.clear(sf::Color::Black);
-
-        window.draw(bgSprite);
-
-        title.setPosition(400,30);
-        window.draw(title);
+*/
 
 
-
-        window.draw(fields);
-        window.draw(circle);
-        window.display();
-    }
 
     std::srand(std::time(NULL));
     //MinesweeperBoard board;
     //MinesweeperBoard testBoardD(10,10,DEBUG);
     //MinesweeperBoard testBoardE(10,10,EASY);
     //MinesweeperBoard testBoardN(10,10,NORMAL);
-    MinesweeperBoard testBoardH(10,10,EASY);
-    MSBoardTextView MStestBoardH(testBoardH);
-    MSTextController ctrl (testBoardH, MStestBoardH);
+    MinesweeperBoard testBoardH(10,10,DEBUG);
+    //testBoardH.revealField(5,8);
+    //testBoardH.revealField(1,9);
+    testBoardH.toggleFlag(5,3);
+    //testBoardH.revealField(0,0);
+   /* MSBoardTextView MStestBoardH(testBoardH);
+    MSTextController ctrl (testBoardH, MStestBoardH);*/
     //board.debug_display();
 /*
+ *
+ *
     //TESTING FIELDS REVEALING aka AUTO-PLAY
     testBoardH.debug_display();
     do{
@@ -110,7 +96,37 @@ int main() {
     testBoardH.debug_display();
     //END OF TEST
 */ // testBoardH.debug_display();
-    ctrl.play();
+
+    MSSFMLView sfmlView(testBoardH);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if(event.type == sf::Event::MouseMoved)
+                circle.setPosition(event.mouseMove.x, event.mouseMove.y);
+            if(event.type == sf::Event::MouseButtonPressed) {
+                if(event.mouseButton.button==sf::Mouse::Left) {
+                    sfmlView.reveal(event.mouseButton.x, event.mouseButton.y);
+                    duck.play();
+                }
+                if(event.mouseButton.button==sf::Mouse::Right) {
+                    sfmlView.flag(event.mouseButton.x, event.mouseButton.y);
+                    duck.play();
+                }
+            }
+        }
+
+        window.clear(sf::Color::Black);
+
+        window.draw(bgSprite);
+        sfmlView.draw(window);
+        window.display();
+    }
+    //ctrl.play();
     //testBoardE.debug_display();
     //testBoardN.debug_display();
     //testBoardH.debug_display();

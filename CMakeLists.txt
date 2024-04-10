@@ -11,12 +11,13 @@ IF (WIN32)
     set(SFML_STATIC_LIBRARIES TRUE)
 ENDIF()
 
-find_package(SFML COMPONENTS graphics audio REQUIRED)
+find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
 configure_file(kaczuszka.wav ${CMAKE_CURRENT_BINARY_DIR}/kaczuszka.wav COPYONLY)
 configure_file(saper_bg.jpg ${CMAKE_CURRENT_BINARY_DIR}/saper_bg.jpg COPYONLY)
 configure_file(VT323-Regular.ttf ${CMAKE_CURRENT_BINARY_DIR}/VT323-Regular.ttf COPYONLY)
-
+configure_file(mine.png ${CMAKE_CURRENT_BINARY_DIR}/mine.png COPYONLY)
+configure_file(flag.png ${CMAKE_CURRENT_BINARY_DIR}/flag.png COPYONLY)
 
 add_executable(saper main.cpp
         MinesweeperBoard.cpp

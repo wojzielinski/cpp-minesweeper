@@ -27,11 +27,17 @@ class MSSFMLView {
     void generate_points();
     void set_textures();
     void set_title();
+    void set_mine_count_text();
+
+    void update_board_state( sf::RenderWindow & win );
 
 
 public:
     MSSFMLView( MinesweeperBoard & boardRef );
     void draw( sf::RenderWindow & windowRef );
+    void reveal( float x, float y );
+    void flag( float x, float y );
+
 };
 
 
