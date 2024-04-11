@@ -1,8 +1,8 @@
 #include "MSSFMLView.h"
 
 #include <iostream>
-#define X_OFF 100
-#define Y_OFF 100
+#define X_OFF 50
+#define Y_OFF 50
 #define FIELD_SIZE 30
 
 //PRIVATE
@@ -33,7 +33,7 @@ void MSSFMLView::set_textures() {
                      (mineRect.height+mineRect.top)/2);
     mineSprite.setScale(0.2,0.2);
 
-    fieldRevealed.setRadius(20);
+    fieldRevealed.setRadius(FIELD_SIZE/2);
     fieldRevealed.setPosition(0,0);
     fieldRevealed.setPointCount(4);
     sf::Color grey(100,100,100,240);
@@ -43,7 +43,7 @@ void MSSFMLView::set_textures() {
                      (fieldRevRect.height+fieldRevRect.top)/2);
     fieldRevealed.setRotation(45);
 
-    field.setRadius(20);
+    field.setRadius(FIELD_SIZE/2);
     field.setPosition(0,0);
     sf::FloatRect fieldRect = field.getLocalBounds();
     field.setPointCount(4);
@@ -73,7 +73,7 @@ void MSSFMLView::update_board_state( sf::RenderWindow & win ) {
                 fieldRevealed.setPosition(pointsCloud[row*boardWidth+col].position);
                 win.draw(fieldRevealed);
                 if(board.getFieldInfo(row,col)=='x'){
-                    mineSprite.setPosition(pointsCloud[(row+col)].position);
+                    mineSprite.setPosition(pointsCloud[(row*boardWidth+col)].position);
                     win.draw(mineSprite);
                 } else{
                     mineCountText[(board.countMines(row,col))].setPosition(pointsCloud[row*boardWidth+col].position);

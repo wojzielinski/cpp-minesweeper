@@ -73,11 +73,7 @@ int main() {
     //MinesweeperBoard testBoardD(10,10,DEBUG);
     //MinesweeperBoard testBoardE(10,10,EASY);
     //MinesweeperBoard testBoardN(10,10,NORMAL);
-    MinesweeperBoard testBoardH(10,10,DEBUG);
-    //testBoardH.revealField(5,8);
-    //testBoardH.revealField(1,9);
-    testBoardH.toggleFlag(5,3);
-    //testBoardH.revealField(0,0);
+    MinesweeperBoard testBoardH(8,8,EASY);
    /* MSBoardTextView MStestBoardH(testBoardH);
     MSTextController ctrl (testBoardH, MStestBoardH);*/
     //board.debug_display();
@@ -111,6 +107,8 @@ int main() {
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button==sf::Mouse::Left) {
                     sfmlView.reveal(event.mouseButton.x, event.mouseButton.y);
+                    if(testBoardH.getGameState()!=RUNNING)
+                        std::cout << "KONIEC GRY" << std::endl;
                     duck.play();
                 }
                 if(event.mouseButton.button==sf::Mouse::Right) {

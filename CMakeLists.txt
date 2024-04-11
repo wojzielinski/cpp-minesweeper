@@ -30,7 +30,7 @@ add_executable(saper main.cpp
         MSSFMLView.h
 )
 
-add_executable(saper-sfml main.cpp
+add_executable(saper-sfml sfml_main.cpp
         MinesweeperBoard.cpp
         MinesweeperBoard.h
         MSSFMLView.cpp
