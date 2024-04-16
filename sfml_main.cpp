@@ -28,13 +28,27 @@ int main() {
         return EXIT_FAILURE;
     sf::Sprite bgSprite(bgImage);
 
-    sf::SoundBuffer duckBuffer;
-    duckBuffer.loadFromFile("kaczuszka.wav");
-    sf::Sound duck;
-    duck.setBuffer(duckBuffer);
+    sf::SoundBuffer flagBuff;
+    flagBuff.loadFromFile("flagSound.wav");
+    sf::Sound flagSound;
+    flagSound.setBuffer(flagBuff);
 
-    MinesweeperBoard board(22,15,NORMAL);
+    sf::SoundBuffer winBuff;
+    winBuff.loadFromFile("winSound.wav");
+    sf::Sound winSound;
+    winSound.setBuffer(winBuff);
 
+    sf::SoundBuffer bombBuff;
+    bombBuff.loadFromFile("bombSound.wav");
+    sf::Sound bombSound;
+    bombSound.setBuffer(bombBuff);
+
+    sf::SoundBuffer clickBuff;
+    clickBuff.loadFromFile("clickSound.wav");
+    sf::Sound clickSound;
+    clickSound.setBuffer(clickBuff);
+
+    MinesweeperBoard board(22,15,EASY);
     MSSFMLView sfmlView(board);
 
     while (window.isOpen())
@@ -49,13 +63,19 @@ int main() {
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button==sf::Mouse::Left) {
                     sfmlView.reveal(event.mouseButton.x, event.mouseButton.y);
-                    if(board.getGameState()!=RUNNING)
-                        std::cout << "KONIEC GRY" << std::endl;
-                    duck.play();
+                    if(board.getGameState()==FINISHED_WIN) {
+                        std::cout << "WYGRANA" << std::endl;
+                        winSound.play();
+                    }
+                    if(board.getGameState()==FINISHED_LOSS){
+                        std::cout << "PRZEGRANA" << std::endl;
+                        bombSound.play();
+                    }
+                    clickSound.play();
                 }
                 if(event.mouseButton.button==sf::Mouse::Right) {
                     sfmlView.flag(event.mouseButton.x, event.mouseButton.y);
-                    duck.play();
+                    flagSound.play();
                 }
             }
         }

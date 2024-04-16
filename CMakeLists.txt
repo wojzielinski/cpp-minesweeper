@@ -13,7 +13,10 @@ ENDIF()
 
 find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
-configure_file(kaczuszka.wav ${CMAKE_CURRENT_BINARY_DIR}/kaczuszka.wav COPYONLY)
+configure_file(flagSound.wav ${CMAKE_CURRENT_BINARY_DIR}/flagSound.wav COPYONLY)
+configure_file(winSound.wav ${CMAKE_CURRENT_BINARY_DIR}/winSound.wav COPYONLY)
+configure_file(bombSound.wav ${CMAKE_CURRENT_BINARY_DIR}/bombSound.wav COPYONLY)
+configure_file(clickSound.wav ${CMAKE_CURRENT_BINARY_DIR}/clickSound.wav COPYONLY)
 configure_file(saper_bg.jpg ${CMAKE_CURRENT_BINARY_DIR}/saper_bg.jpg COPYONLY)
 configure_file(VT323-Regular.ttf ${CMAKE_CURRENT_BINARY_DIR}/VT323-Regular.ttf COPYONLY)
 configure_file(mine.png ${CMAKE_CURRENT_BINARY_DIR}/mine.png COPYONLY)
