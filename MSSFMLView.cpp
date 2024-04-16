@@ -149,6 +149,10 @@ MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(
 void MSSFMLView::draw(sf::RenderWindow &windowRef) {
     update_board_state(windowRef);
     title.setPosition(windowRef.getSize().x/2, 30);
+    if(board.getGameState()==FINISHED_LOSS)
+        title.setString("Game Over!");
+    if(board.getGameState()==FINISHED_WIN)
+        title.setString("You won!");
     windowRef.draw(title);
     windowRef.draw(pointsCloud);
 }

@@ -52,7 +52,7 @@ int main() {
     sf::Sound clickSound;
     clickSound.setBuffer(clickBuff);
 
-    MinesweeperBoard board(22,15,EASY);
+    MinesweeperBoard board(22,15,DEBUG);
     MSSFMLView sfmlView(board);
 
     while (window.isOpen())
