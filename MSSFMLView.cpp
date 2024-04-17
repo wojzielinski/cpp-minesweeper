@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#define FIELD_SIZE 30
-
 //PRIVATE
 //===============
 void MSSFMLView::generate_points() {
@@ -11,7 +9,7 @@ void MSSFMLView::generate_points() {
     pointsCloud.resize(board.getBoardWidth() * board.getBoardHeight());
     for(int row=0; row<boardHeight; ++row){
         for(int col=0; col<boardWidth; ++col){
-            pointsCloud[row*boardWidth+col]=sf::Vector2f(x_off+col*FIELD_SIZE,y_off+row*FIELD_SIZE);
+            pointsCloud[row*boardWidth+col] = sf::Vector2f(x_off+col*field_size,y_off+row*field_size);
         }
     }
 }
@@ -22,7 +20,7 @@ void MSSFMLView::set_flag_txt() {
     sf::FloatRect flagRect = flagSprite.getLocalBounds();
     flagSprite.setOrigin( (flagRect.width+flagRect.left)/2,
                           (flagRect.height+flagRect.top)/2);
-    flagSprite.setScale(FIELD_SIZE/64.0,FIELD_SIZE/64.0);
+    flagSprite.setScale(field_size/64.0,field_size/64.0);
 }
 
 void MSSFMLView::set_mine_txt() {
@@ -31,11 +29,11 @@ void MSSFMLView::set_mine_txt() {
     sf::FloatRect mineRect = mineSprite.getLocalBounds();
     mineSprite.setOrigin( (mineRect.width+mineRect.left)/2,
                           (mineRect.height+mineRect.top)/2);
-    mineSprite.setScale(FIELD_SIZE/64.0,FIELD_SIZE/64.0);
+    mineSprite.setScale(field_size/64.0,field_size/64.0);
 }
 
 void MSSFMLView::set_field_revealed_txt() {
-    fieldRevealed.setRadius(FIELD_SIZE/2.0+3);
+    fieldRevealed.setRadius(field_size/2.0+3);
     fieldRevealed.setPosition(0,0);
     fieldRevealed.setPointCount(4);
     sf::Color grey(100,100,100,240);
@@ -47,7 +45,7 @@ void MSSFMLView::set_field_revealed_txt() {
 }
 
 void MSSFMLView::set_field_txt() {
-    field.setRadius(FIELD_SIZE/2.0+5);
+    field.setRadius(field_size/2.0+5);
     field.setPosition(0,0);
     sf::FloatRect fieldRect = field.getLocalBounds();
     field.setPointCount(4);
@@ -58,7 +56,7 @@ void MSSFMLView::set_field_txt() {
 }
 
 void MSSFMLView::set_field_mine_txt() {
-    fieldWithMine.setRadius(FIELD_SIZE/2.0+5);
+    fieldWithMine.setRadius(field_size/2.0+5);
     fieldWithMine.setPosition(0,0);
     sf::FloatRect fieldWithMineRect = fieldWithMine.getLocalBounds();
     fieldWithMine.setPointCount(4);
@@ -70,6 +68,9 @@ void MSSFMLView::set_field_mine_txt() {
 }
 
 void MSSFMLView::set_textures() {
+    bgImage.loadFromFile("saper_bg.jpg");
+    bgSprite.setTexture(bgImage);
+
     set_flag_txt();
     set_mine_txt();
     set_field_revealed_txt();
@@ -83,7 +84,7 @@ void MSSFMLView::set_title() {
     title.setString("Minesweeper!");
     title.setCharacterSize(40);
     title.setFillColor(sf::Color::Red);
-    sf::FloatRect titleRect=title.getLocalBounds();
+    sf::FloatRect titleRect = title.getLocalBounds();
     title.setOrigin(
             (titleRect.left + titleRect.width)/2.0f,
             (titleRect.top + titleRect.height)/2.0f
@@ -138,6 +139,7 @@ void MSSFMLView::set_mine_count_text() {
 //===============
 MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(boardRef.getBoardWidth()),boardHeight(boardRef.getBoardHeight())
 {
+    field_size=30;
     x_off=90;
     y_off=100;
     generate_points();
@@ -147,14 +149,26 @@ MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(
 }
 
 void MSSFMLView::draw(sf::RenderWindow &windowRef) {
+    windowRef.clear(sf::Color::Black);
+    windowRef.draw(bgSprite);
     update_board_state(windowRef);
     title.setPosition(windowRef.getSize().x/2, 30);
-    if(board.getGameState()==FINISHED_LOSS)
+    if(board.getGameState()==FINISHED_LOSS) {
         title.setString("Game Over!");
-    if(board.getGameState()==FINISHED_WIN)
+        title.setOrigin(
+                (title.getLocalBounds().left + title.getLocalBounds().width) / 2.0f,
+                (title.getLocalBounds().top + title.getLocalBounds().height) / 2.0f
+        );
+    }
+    if(board.getGameState()==FINISHED_WIN) {
         title.setString("You won!");
+        title.setOrigin(
+                (title.getLocalBounds().left + title.getLocalBounds().width) / 2.0f,
+                (title.getLocalBounds().top + title.getLocalBounds().height) / 2.0f
+        );
+    }
     windowRef.draw(title);
-    windowRef.draw(pointsCloud);
+    //windowRef.draw(pointsCloud);
 }
 
 void MSSFMLView::reveal(float x, float y) {
@@ -163,7 +177,7 @@ void MSSFMLView::reveal(float x, float y) {
         for(int col=0; col<boardWidth; ++col){
             pointX = pointsCloud[row*boardWidth+col].position.x;
             pointY = pointsCloud[row*boardWidth+col].position.y;
-            if(x<(pointX+FIELD_SIZE/2.0) && x>(pointX-FIELD_SIZE/2.0) && y<(pointY+FIELD_SIZE/2.0) && y>(pointY-FIELD_SIZE/2.0))
+            if(x<(pointX+field_size/2.0) && x>(pointX-field_size/2.0) && y<(pointY+field_size/2.0) && y>(pointY-field_size/2.0))
                 board.revealField(row,col);
         }
     }
@@ -175,8 +189,18 @@ void MSSFMLView::flag(float x, float y) {
         for(int col=0; col<boardWidth; ++col){
             pointX = pointsCloud[row*boardWidth+col].position.x;
             pointY = pointsCloud[row*boardWidth+col].position.y;
-            if(x<(pointX+FIELD_SIZE/2.0) && x>(pointX-FIELD_SIZE/2.0) && y<(pointY+FIELD_SIZE/2.0) && y>(pointY-FIELD_SIZE/2.0))
+            if(x<(pointX+field_size/2.0) && x>(pointX-field_size/2.0) && y<(pointY+field_size/2.0) && y>(pointY-field_size/2.0))
                 board.toggleFlag(row,col);
         }
     }
+}
+
+sf::Vector2i MSSFMLView::get_point_pos(int row, int col) const {
+    sf::Vector2i position(  pointsCloud[row*boardWidth+col].position.x,
+                            pointsCloud[row*boardWidth+col].position.y);
+    return position;
+}
+
+int MSSFMLView::get_field_size() const {
+    return field_size;
 }

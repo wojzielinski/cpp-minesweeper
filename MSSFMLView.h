@@ -11,6 +11,7 @@ class MSSFMLView {
     const int boardHeight;
     int x_off;
     int y_off;
+    int field_size;
 
     sf::VertexArray pointsCloud;
     sf::Font font;
@@ -23,6 +24,8 @@ class MSSFMLView {
     sf::CircleShape fieldRevealed;
     sf::CircleShape field;
     sf::CircleShape fieldWithMine;
+    sf::Texture bgImage;
+    sf::Sprite bgSprite;
 
     void generate_points();
     void set_textures();
@@ -42,6 +45,8 @@ public:
     void draw( sf::RenderWindow & windowRef );
     void reveal( float x, float y );
     void flag( float x, float y );
+    sf::Vector2i get_point_pos(int row, int col) const;
+    int get_field_size() const;
 };
 
 

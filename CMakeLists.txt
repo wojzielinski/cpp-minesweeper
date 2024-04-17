@@ -38,7 +38,9 @@ add_executable(saper-sfml sfml_main.cpp
         MinesweeperBoard.cpp
         MinesweeperBoard.h
         MSSFMLView.cpp
-        MSSFMLView.h)
+        MSSFMLView.h
+        MSSFMLController.cpp
+        MSSFMLController.h)
 target_link_libraries(saper-sfml sfml-graphics
                                 sfml-audio
 )
