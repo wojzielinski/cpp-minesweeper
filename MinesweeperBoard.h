@@ -18,6 +18,7 @@ class MinesweeperBoard {
         GameMode mode;
         GameState state;
         Field data[MAX_SIZE][MAX_SIZE]{};
+        int flagsRemaining;
         void change_location(int row, int col);
         void display_field(int row, int col) const;
         bool field_on_board(int row, int col) const;
@@ -34,11 +35,13 @@ class MinesweeperBoard {
     public:
         MinesweeperBoard();
         MinesweeperBoard(int width, int height, GameMode mode);
+        void restart();
         void debug_display() const;
         // simple getters - return appropriate values (passed to or calculated in constructor)
         int getBoardWidth() const;
         int getBoardHeight() const;
         int getMineCount() const;
+        int getFlagsRemaining() const;
 
         // count mines around (row,col) position
         // if the field at (row,col) was not revealed - return -1

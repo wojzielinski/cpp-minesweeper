@@ -45,10 +45,30 @@ void MSSFMLController::flag(int x, int y) {
                 board.toggleFlag(row,col);
         }
     }
+    view.update_flags_rem_text();
 }
 
+bool MSSFMLController::clickInBounds(sf::FloatRect bounds, int x, int y) const {
+    if(x >= bounds.left && x <= (bounds.left+bounds.width) &&
+        y >= bounds.top && y <= (bounds.top+bounds.height))
+        return true;
+    return false;
+}
 
-
+void MSSFMLController::trigIfFinished (int x, int y) {
+    if(board.getGameState()==FINISHED_WIN) {
+        winSound.play();
+        if(clickInBounds(view.getRButtonBound(), x, y)){
+            board.restart();
+        }
+    }
+    if(board.getGameState()==FINISHED_LOSS){
+        bombSound.play();
+        if(clickInBounds(view.getRButtonBound(), x, y)){
+            board.restart();
+        }
+    }
+}
 MSSFMLController::MSSFMLController(MSSFMLView &viewRef, MinesweeperBoard &boardRef) : board(boardRef), view(viewRef),boardWidth(boardRef.getBoardWidth()),boardHeight(boardRef.getBoardHeight())
 {
     set_assets();
@@ -65,13 +85,8 @@ void MSSFMLController::play(sf::RenderWindow & window) {
             if(event.type == sf::Event::MouseButtonPressed) {
                 if(event.mouseButton.button==sf::Mouse::Left) {
                     reveal(event.mouseButton.x, event.mouseButton.y);
-                    if(board.getGameState()==FINISHED_WIN) {
-                        winSound.play();
-                    }
-                    if(board.getGameState()==FINISHED_LOSS){
-                        bombSound.play();
-                    }
                     clickSound.play();
+                    trigIfFinished(event.mouseButton.x, event.mouseButton.y);
                 }
                 if(event.mouseButton.button==sf::Mouse::Right) {
                     flag(event.mouseButton.x, event.mouseButton.y);

@@ -29,6 +29,8 @@ class MSSFMLController {
     void set_assets();
     void reveal(int x, int y);
     void flag(int x, int y);
+    bool clickInBounds(sf::FloatRect bounds, int x, int y) const;
+    void trigIfFinished(int x, int y);
 public:
     MSSFMLController( MSSFMLView & viewRef , MinesweeperBoard & boardRef);
     void play(sf::RenderWindow & window);

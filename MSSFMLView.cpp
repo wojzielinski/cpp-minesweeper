@@ -14,6 +14,23 @@ void MSSFMLView::generate_points() {
     }
 }
 
+void MSSFMLView::set_restart_button() {
+    restartButton.setSize(sf::Vector2f(120,40));
+    restartButton.setFillColor(sf::Color(255,191,0));
+    restartButton.setOutlineColor(sf::Color::Black);
+    restartButton.setOutlineThickness(2);
+    restartButton.setOrigin((restartButton.getLocalBounds().left+restartButton.getLocalBounds().width)/2,
+                            (restartButton.getLocalBounds().top+restartButton.getLocalBounds().height)/2);
+    restartText.setString("RESTART");
+    restartText.setFont(font);
+    restartText.setCharacterSize(40);
+    restartText.setFillColor(sf::Color::Black);
+    restartText.setOrigin((restartText.getLocalBounds().left+restartText.getLocalBounds().width)/2,
+                            (restartText.getLocalBounds().top+restartText.getLocalBounds().height)/2);
+    restartButton.setPosition(400,570);
+    restartText.setPosition(restartButton.getPosition().x, restartButton.getPosition().y-10);
+}
+
 void MSSFMLView::set_flag_txt() {
     flagTxt.loadFromFile("flag.png");
     flagSprite.setTexture(flagTxt);
@@ -135,6 +152,17 @@ void MSSFMLView::set_mine_count_text() {
     }
 }
 
+void MSSFMLView::set_flags_count_text() {
+    std::string str = "Flags remaining: ";
+    str.append(std::to_string(board.getFlagsRemaining()));
+    font.loadFromFile("VT323-Regular.ttf");
+    flagsCounter.setFont(font);
+    flagsCounter.setString(str);
+    flagsCounter.setCharacterSize(25);
+    flagsCounter.setFillColor(sf::Color(255, 191,0));
+    flagsCounter.setPosition(x_off-field_size/2,y_off-50);
+}
+
 //PUBLIC
 //===============
 MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(boardRef.getBoardWidth()),boardHeight(boardRef.getBoardHeight())
@@ -146,6 +174,8 @@ MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(
     set_title();
     set_textures();
     set_mine_count_text();
+    set_flags_count_text();
+    set_restart_button();
 }
 
 void MSSFMLView::draw(sf::RenderWindow &windowRef) {
@@ -159,6 +189,8 @@ void MSSFMLView::draw(sf::RenderWindow &windowRef) {
                 (title.getLocalBounds().left + title.getLocalBounds().width) / 2.0f,
                 (title.getLocalBounds().top + title.getLocalBounds().height) / 2.0f
         );
+        windowRef.draw(restartButton);
+        windowRef.draw(restartText);
     }
     if(board.getGameState()==FINISHED_WIN) {
         title.setString("You won!");
@@ -166,33 +198,12 @@ void MSSFMLView::draw(sf::RenderWindow &windowRef) {
                 (title.getLocalBounds().left + title.getLocalBounds().width) / 2.0f,
                 (title.getLocalBounds().top + title.getLocalBounds().height) / 2.0f
         );
+        windowRef.draw(restartButton);
+        windowRef.draw(restartText);
     }
     windowRef.draw(title);
+    windowRef.draw(flagsCounter);
     //windowRef.draw(pointsCloud);
-}
-
-void MSSFMLView::reveal(float x, float y) {
-    float pointX, pointY;
-    for(int row=0; row<boardHeight; ++row){
-        for(int col=0; col<boardWidth; ++col){
-            pointX = pointsCloud[row*boardWidth+col].position.x;
-            pointY = pointsCloud[row*boardWidth+col].position.y;
-            if(x<(pointX+field_size/2.0) && x>(pointX-field_size/2.0) && y<(pointY+field_size/2.0) && y>(pointY-field_size/2.0))
-                board.revealField(row,col);
-        }
-    }
-}
-
-void MSSFMLView::flag(float x, float y) {
-    float pointX, pointY;
-    for(int row=0; row<boardHeight; ++row){
-        for(int col=0; col<boardWidth; ++col){
-            pointX = pointsCloud[row*boardWidth+col].position.x;
-            pointY = pointsCloud[row*boardWidth+col].position.y;
-            if(x<(pointX+field_size/2.0) && x>(pointX-field_size/2.0) && y<(pointY+field_size/2.0) && y>(pointY-field_size/2.0))
-                board.toggleFlag(row,col);
-        }
-    }
 }
 
 sf::Vector2i MSSFMLView::get_point_pos(int row, int col) const {
@@ -203,4 +214,14 @@ sf::Vector2i MSSFMLView::get_point_pos(int row, int col) const {
 
 int MSSFMLView::get_field_size() const {
     return field_size;
+}
+
+sf::FloatRect MSSFMLView::getRButtonBound() const {
+    return restartButton.getGlobalBounds();
+}
+
+void MSSFMLView::update_flags_rem_text() {
+    std::string str = "Flags remaining: ";
+    str.append(std::to_string(board.getFlagsRemaining()));
+    flagsCounter.setString(str);
 }

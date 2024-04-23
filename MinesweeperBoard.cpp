@@ -172,6 +172,15 @@ MinesweeperBoard::MinesweeperBoard(int width, int height, GameMode gMode){
     set_empty(width,height);
     mode = gMode;
     generate_mines(gMode);
+    flagsRemaining = getMineCount();
+    state = RUNNING;
+    firstMove = true;
+}
+
+void MinesweeperBoard::restart(){
+    set_empty(cols,rows);
+    generate_mines(mode);
+    flagsRemaining = getMineCount();
     state = RUNNING;
     firstMove = true;
 }
@@ -241,8 +250,10 @@ void MinesweeperBoard::toggleFlag(int row, int col) {
 
     if(hasFlag(row,col)){
         data[row][col].hasFlag = false;
+        ++flagsRemaining;
     } else {
         data[row][col].hasFlag = true;
+        --flagsRemaining;
     }
 }
 
@@ -286,4 +297,8 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const {
     if(data[row][col].hasMine) return 'x';
     if(countMines(row,col)==0) return ' ';
     return static_cast<char>(countMines(row,col)+'0');
+}
+
+int MinesweeperBoard::getFlagsRemaining() const {
+    return flagsRemaining;
 }
