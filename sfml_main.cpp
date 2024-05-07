@@ -22,4 +22,4 @@ int main() {
     sfmlController.play(window);
 
     return 0;
-}
+    }

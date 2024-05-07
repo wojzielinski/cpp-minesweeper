@@ -1,7 +1,3 @@
-//
-// Created by c on 4/17/24.
-//
-
 #ifndef SAPER_MSSFMLCONTROLLER_H
 #define SAPER_MSSFMLCONTROLLER_H
 
@@ -35,6 +31,5 @@ public:
     MSSFMLController( MSSFMLView & viewRef , MinesweeperBoard & boardRef);
     void play(sf::RenderWindow & window);
 };
-
 
 #endif //SAPER_MSSFMLCONTROLLER_H

@@ -4,6 +4,8 @@
 
 //PRIVATE
 //===============
+
+//Generates vector of points matching board size - point will make centre of board fields
 void MSSFMLView::generate_points() {
     //pointsCloud.setPrimitiveType(sf::Points);
     pointsCloud.resize(board.getBoardWidth() * board.getBoardHeight());
@@ -14,6 +16,7 @@ void MSSFMLView::generate_points() {
     }
 }
 
+//Creates "restart" button and sets it's size, colour and other visuals
 void MSSFMLView::set_restart_button() {
     restartButton.setSize(sf::Vector2f(120,40));
     restartButton.setFillColor(sf::Color(255,191,0));
@@ -31,6 +34,7 @@ void MSSFMLView::set_restart_button() {
     restartText.setPosition(restartButton.getPosition().x, restartButton.getPosition().y-10);
 }
 
+//Sets textures for flag icon
 void MSSFMLView::set_flag_txt() {
     flagTxt.loadFromFile("flag.png");
     flagSprite.setTexture(flagTxt);
@@ -40,6 +44,7 @@ void MSSFMLView::set_flag_txt() {
     flagSprite.setScale(field_size/64.0,field_size/64.0);
 }
 
+//Sets textures for mine icon
 void MSSFMLView::set_mine_txt() {
     mineTxt.loadFromFile("mine.png");
     mineSprite.setTexture(mineTxt);
@@ -49,6 +54,7 @@ void MSSFMLView::set_mine_txt() {
     mineSprite.setScale(field_size/64.0,field_size/64.0);
 }
 
+//Sets visuals for revealed field
 void MSSFMLView::set_field_revealed_txt() {
     fieldRevealed.setRadius(field_size/2.0+3);
     fieldRevealed.setPosition(0,0);
@@ -61,6 +67,7 @@ void MSSFMLView::set_field_revealed_txt() {
     fieldRevealed.setRotation(45);
 }
 
+//Sets visuals for not revealed field
 void MSSFMLView::set_field_txt() {
     field.setRadius(field_size/2.0+5);
     field.setPosition(0,0);
@@ -72,6 +79,7 @@ void MSSFMLView::set_field_txt() {
     field.setRotation(45);
 }
 
+//Sets textures for mine icon
 void MSSFMLView::set_field_mine_txt() {
     fieldWithMine.setRadius(field_size/2.0+5);
     fieldWithMine.setPosition(0,0);
@@ -84,6 +92,7 @@ void MSSFMLView::set_field_mine_txt() {
     fieldWithMine.setRotation(45);
 }
 
+//Sets all assets - background and other textures
 void MSSFMLView::set_textures() {
     bgImage.loadFromFile("saper_bg.jpg");
     bgSprite.setTexture(bgImage);
@@ -95,6 +104,7 @@ void MSSFMLView::set_textures() {
     set_field_mine_txt();
 }
 
+//Sets title, that is being displayed above the board
 void MSSFMLView::set_title() {
     font.loadFromFile("VT323-Regular.ttf");
     title.setFont(font);
@@ -108,6 +118,7 @@ void MSSFMLView::set_title() {
     );
 }
 
+//Draws fields depending on it's status (revealed/flagged/mine etc)
 void MSSFMLView::draw_field(int row, int col, sf::RenderWindow & win) {
     if(board.isRevealed(row,col)){
         fieldRevealed.setPosition(pointsCloud[row*boardWidth+col].position);
@@ -131,6 +142,7 @@ void MSSFMLView::draw_field(int row, int col, sf::RenderWindow & win) {
     }
 }
 
+//Updates board state - renders all fields in given window
 void MSSFMLView::update_board_state( sf::RenderWindow & win ) {
     for(int row=0; row<boardHeight; ++row){
         for(int col=0; col<boardWidth; ++col){
@@ -139,10 +151,13 @@ void MSSFMLView::update_board_state( sf::RenderWindow & win ) {
     }
 }
 
+//Sets text that is used to display number of mines around a field
+//It is a vector with 9 elements, index of element is related to displayed number
+//eg. mineCountText[2] contains Text with string "2"
 void MSSFMLView::set_mine_count_text() {
-    mineCountText.resize(10);
+    mineCountText.resize(9);
     sf::FloatRect txtRect;
-    for(int index=0; index<10; ++index){
+    for(int index=0; index<9; ++index){
         mineCountText[index]=sf::Text(std::to_string(index),font);
         mineCountText[index].setFillColor(sf::Color::Blue);
         mineCountText[index].setPosition(0,0);
@@ -152,6 +167,7 @@ void MSSFMLView::set_mine_count_text() {
     }
 }
 
+//Sets "Flags remaining" label
 void MSSFMLView::set_flags_count_text() {
     std::string str = "Flags remaining: ";
     str.append(std::to_string(board.getFlagsRemaining()));
@@ -165,6 +181,8 @@ void MSSFMLView::set_flags_count_text() {
 
 //PUBLIC
 //===============
+
+//SFML View constructor - sets board reference and creates view setup
 MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(boardRef.getBoardWidth()),boardHeight(boardRef.getBoardHeight())
 {
     field_size=30;
@@ -178,11 +196,12 @@ MSSFMLView::MSSFMLView(MinesweeperBoard &boardRef) : board(boardRef),boardWidth(
     set_restart_button();
 }
 
+//Draws all elements in window, that was passed to function by reference
 void MSSFMLView::draw(sf::RenderWindow &windowRef) {
     windowRef.clear(sf::Color::Black);
-    windowRef.draw(bgSprite);
+    windowRef.draw(bgSprite);                       //draw background
     update_board_state(windowRef);
-    title.setPosition(windowRef.getSize().x/2, 30);
+    title.setPosition(windowRef.getSize().x/2, 30);   //set title position and string
     if(board.getGameState()==FINISHED_LOSS) {
         title.setString("Game Over!");
         title.setOrigin(
@@ -203,23 +222,27 @@ void MSSFMLView::draw(sf::RenderWindow &windowRef) {
     }
     windowRef.draw(title);
     windowRef.draw(flagsCounter);
-    //windowRef.draw(pointsCloud);
+    //windowRef.draw(pointsCloud);          //draws base points (pointsCloud)
 }
 
+//Gets point position in window
 sf::Vector2i MSSFMLView::get_point_pos(int row, int col) const {
     sf::Vector2i position(  pointsCloud[row*boardWidth+col].position.x,
                             pointsCloud[row*boardWidth+col].position.y);
     return position;
 }
 
+//Gets field size
 int MSSFMLView::get_field_size() const {
     return field_size;
 }
 
+//Gets bounds of restart button
 sf::FloatRect MSSFMLView::getRButtonBound() const {
     return restartButton.getGlobalBounds();
 }
 
+//Update "Flags remaining" label
 void MSSFMLView::update_flags_rem_text() {
     std::string str = "Flags remaining: ";
     str.append(std::to_string(board.getFlagsRemaining()));

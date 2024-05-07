@@ -4,6 +4,8 @@
 
 //PRIVATE
 //===============
+
+//Gets user input - player choose action (reveal, flag, display)
 Action MSTextController::choose_action() {
     char choice[2];
     std::cout << "What would you like to do?" << std::endl;
@@ -24,20 +26,24 @@ Action MSTextController::choose_action() {
             return choose_action();
     }
 }
+
 //PUBLIC
 //===============
+
+//Text controller constructor
 MSTextController::MSTextController(MinesweeperBoard & boardRef, MSBoardTextView & viewRef) : board(boardRef), view(viewRef)
 {
-
+    //Sets board and view reference
 }
 
+//Runs game as long as game is running
 void MSTextController::play() {
     while(board.getGameState() == GameState::RUNNING){
         view.display();
         Action action = choose_action();
         int row, col;
 
-        switch (action) {
+        switch (action){                                    //Get user input
             case Action::FLAG:
                 std::cout << "Choose row and col: ";
                 std::cin >> row;
@@ -58,6 +64,7 @@ void MSTextController::play() {
     print_gamestate();
 }
 
+//Prints game state
 void MSTextController::print_gamestate() const {
     GameState state = board.getGameState();
     switch (state) {
