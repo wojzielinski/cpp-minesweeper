@@ -17,7 +17,7 @@ Basic Minesweeper written in C++
 Clone repository
 
 ```bash
-  git clone https://zts.ita.pwr.wroc.pl/gitlab/wojciech.zielinski_278327/saper_wojciech_zielinski
+  git clone https://github.com/wojzielinski/cpp-minesweeper.git
 ```
     
 Get SFML from [SFML website](https://www.sfml-dev.org/). For Windows unzip files in this directory:
